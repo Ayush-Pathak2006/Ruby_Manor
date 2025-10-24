@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams } from 'react-router-dom';
+import { useParams, useOutletContext } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
@@ -9,6 +9,7 @@ import BookingForm from '../components/BookingForm';
 
 const RoomDetailPage = () => {
   const { id } = useParams();
+  const { session, profile } = useOutletContext();
   const [room, setRoom] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -31,7 +32,7 @@ const RoomDetailPage = () => {
 
   return (
     <>
-      <Navbar />
+      {/* <Navbar /> */}
       <div className="pt-28 bg-gray-900 text-white min-h-screen">
         <ImageCarousel room={room} />
         <section className="container mx-auto my-12 p-4 flex flex-col md:flex-row gap-8">
@@ -39,11 +40,11 @@ const RoomDetailPage = () => {
             <RoomSpecs room={room} />
           </div>
           <div className="md:w-1/3">
-            <BookingForm room={room} />
+            <BookingForm room={room} session={session} profile={profile} />
           </div>
         </section>
       </div>
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 };

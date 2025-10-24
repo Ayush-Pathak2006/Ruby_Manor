@@ -8,7 +8,7 @@ const RoomSpecs = ({ room }) => {
       <div className="grid grid-cols-2 gap-4 text-lg">
         <div className="p-4 bg-gray-700 rounded">
           <span className="font-bold block">Price</span>
-          <span>${room.price_per_night} / night</span>
+          <span>Rs{room.price_per_night} / night</span>
         </div>
         <div className="p-4 bg-gray-700 rounded">
           <span className="font-bold block">View</span>

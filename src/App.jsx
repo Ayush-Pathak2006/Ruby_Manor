@@ -1,40 +1,39 @@
-import React, { useState, useEffect } from 'react';
+// src/App.jsx
+
+import React from 'react';
 import { Routes, Route } from 'react-router-dom';
-import { supabase } from './services/supabaseClient';
+
+// NEW: Import the main Layout component
+import Layout from './components/Layout';
+import DiningDetailPage from './pages/DiningDetailPage';
+// Import Pages
 import HomePage from './pages/HomePage';
 import RoomDetailPage from './pages/RoomDetailPage';
 import LoginPage from './pages/LoginPage';
 import SetupProfile from './pages/SetUpProfile';
+import PaymentPage from './pages/PaymentPage';
+import MyBookingsPage from './pages/MyBookingsPage';
+import ContactUsPage from './pages/ContactUsPage';
+import TermsAndConditionsPage from './pages/TermsAndConditionsPage';
 
 function App() {
-
-  const [session, setSession] = useState(null);
-
-  useEffect(() => {
-    // Fetch the initial session
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
-
-    // Listen for changes in authentication state (login, logout)
-    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-
-    // Cleanup the subscription when the component unmounts
-    return () => subscription.unsubscribe();
-  }, []);
-
-  console.log("Current session:", session);
-
   return (
-    <div>
-      <Routes>
+    <Routes>
+      {/* CHANGED: All pages are now children of the Layout route. */}
+      {/* This provides a consistent Navbar and Footer for your entire app. */}
+      <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/rooms/:id" element={<RoomDetailPage />} />
+        <Route path="/payment" element={<PaymentPage />} />
+        <Route path="/my-bookings" element={<MyBookingsPage />} />
         <Route path="/login" element={<LoginPage />} />
-      </Routes>
-    </div>
+        {/* NEW: Added the route for the profile setup page */}
+        <Route path="/dining/:id" element={<DiningDetailPage />} />
+        <Route path="/setup-profile" element={<SetupProfile />} />
+        <Route path="/contact" element={<ContactUsPage />} />
+        <Route path="/terms" element={<TermsAndConditionsPage />} />
+      </Route>
+    </Routes>
   );
 }
 

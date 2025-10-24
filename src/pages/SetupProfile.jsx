@@ -1,30 +1,50 @@
 // src/pages/SetupProfile.jsx
-import React, { useState } from 'react';
+
+import React, { useState, useEffect } from 'react'; // NEW: Added useEffect
 import { supabase } from '../services/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
-const SetupProfile = ({ session }) => {
+const SetupProfile = () => {
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
+  const [session, setSession] = useState(null); // NEW: Local session state
   const navigate = useNavigate();
+
+  // NEW: Get the current session to access user metadata
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      // Pre-fill the name from Google if available
+      if (session?.user?.user_metadata?.full_name) {
+        setFullName(session.user.user_metadata.full_name);
+      }
+    });
+  }, []);
 
   const handleProfileSetup = async (e) => {
     e.preventDefault();
     setLoading(true);
-    const { user } = session;
-    const { error } = await supabase.from('profiles').upsert({
-      id: user.id,
-      full_name: fullName,
-      updated_at: new Date(),
-    });
+    // CHANGED: Using a try...catch...finally block for robust state handling
+    try {
+      if (!session?.user) throw new Error("Not authenticated!");
 
-    if (error) {
+      const { user } = session;
+      const { error } = await supabase.from('profiles').upsert({
+        id: user.id,
+        full_name: fullName,
+        updated_at: new Date(),
+      });
+
+      if (error) throw error;
+      
+      alert('Profile saved successfully!');
+      navigate('/'); // Redirect after success
+    } catch (error) {
       alert(error.message);
-    } else {
-      // Redirect to home page after setup is complete
-      navigate('/');
+    } finally {
+      // This will always run, ensuring the button is never stuck on "Saving..."
+      setLoading(false);
     }
-    setLoading(false);
   };
 
   return (
@@ -44,7 +64,7 @@ const SetupProfile = ({ session }) => {
               required
             />
           </div>
-          <button type="submit" disabled={loading} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded transition-colors duration-300">
+          <button type="submit" disabled={loading} className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded transition-colors duration-300 disabled:bg-gray-500">
             {loading ? 'Saving...' : 'Complete Setup'}
           </button>
         </form>

@@ -3,6 +3,10 @@
 @tailwind components;
 @tailwind utilities;
 
+html {
+  scroll-behavior: smooth;
+}
+
 
 #page1 h1 {
   position: relative; /* This is crucial for positioning the pseudo-element */
@@ -16,4 +20,13 @@
   -webkit-text-stroke: 2px #ff4444; /* This creates the red outline */
   color: transparent;
   z-index: -1;
+}
+
+
+.hide-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+.hide-scrollbar {
+  -ms-overflow-style: none;  /* IE and Edge */
+  scrollbar-width: none;  /* Firefox */
 }

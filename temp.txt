@@ -1,0 +1,7 @@
+ if (loading) {
+    return <div className="h-screen flex items-center justify-center bg-gray-900 text-white">Loading menu...</div>;
+  }
+
+  if (!diningOption) {
+    return <div className="h-screen flex items-center justify-center bg-gray-900 text-white">Restaurant not found.</div>;
+  }
