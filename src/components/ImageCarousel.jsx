@@ -1,8 +1,6 @@
 import React from 'react';
 
 const ImageCarousel = ({ room }) => {
-  // For a real carousel, you'd have an array of images.
-  // We are just displaying the main one here.
   return (
     <section className="h-[60vh] bg-gray-800">
       <div

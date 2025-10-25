@@ -1,11 +1,8 @@
-// src/components/Dining.jsx
-
 import React, { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
-import { supabase } from '../services/supabaseClient'; // NEW: Import supabase
+import { supabase } from '../services/supabaseClient'; 
 
 const DiningCard = ({ option }) => (
-  // CHANGED: Card width is now responsive
   <div className="flex-shrink-0 w-full md:w-1/3 p-4 snap-center">
     <Link to={`/dining/${option.id}`}>
       <div className="h-96 rounded-2xl overflow-hidden group relative shadow-lg">
@@ -22,10 +19,8 @@ const DiningCard = ({ option }) => (
 const Dining = () => {
   const [diningOptions, setDiningOptions] = useState([]);
   const [loading, setLoading] = useState(true);
-  // NEW: Ref for the dining scroll container
   const diningScrollContainer = useRef(null);
 
-  // NEW: useEffect to fetch data from the 'dining' table
   useEffect(() => {
     const getDiningOptions = async () => {
       setLoading(true);
@@ -40,7 +35,6 @@ const Dining = () => {
     getDiningOptions();
   }, []);
 
-  // We duplicate the array to create a seamless loop for the carousel
   const duplicatedOptions = [...diningOptions, ...diningOptions];
 
   const scrollDining = (direction) => {
@@ -58,8 +52,7 @@ const Dining = () => {
       <div className="text-center mb-12">
         <h2 className="text-5xl font-extrabold">Dining</h2>
       </div>
-      
-      {/* Carousel Container */}
+
       <div className="w-full overflow-hidden px-4">
         {loading ? (
           <p className="text-center text-xl">Loading dining options...</p>
@@ -71,7 +64,6 @@ const Dining = () => {
           </div>
         )}
       </div>
-      {/* Navigation Buttons */}
       <button onClick={() => scrollDining('left')} className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 mx-6 mt-8">{'<'}</button>
       <button onClick={() => scrollDining('right')} className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 mx-6 mt-8">{'>'}</button>
     </div>

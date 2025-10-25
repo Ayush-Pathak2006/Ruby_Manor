@@ -54,9 +54,9 @@ const Navbar = ({ session, profile }) => {
       <nav ref={navRef} className={navClassName}>
         {/* LEFT SIDE: Logo and Navigation Links */}
         <div className="flex items-center gap-10">
-          <Link to="/" onClick={() => setIsMenuOpen(false)}>
+           <a href="/#about-us" className="cursor-pointer">
             <img src="/hotel.svg" alt="Ruby Manor Logo" className="h-16" />
-          </Link>
+          </a>
           <div className="hidden md:flex items-center gap-8 text-white uppercase font-semibold">
             <a href="/#about-us" className="cursor-pointer">
               About Us

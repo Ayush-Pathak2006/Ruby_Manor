@@ -3,7 +3,6 @@ import { useNavigate } from 'react-router-dom';
 
 const BookingForm = ({ room, session, profile }) => {
 
-  // NEW: State for each form field
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [checkIn, setCheckIn] = useState('');
@@ -11,8 +10,6 @@ const BookingForm = ({ room, session, profile }) => {
   const [totalCost, setTotalCost] = useState(0);
   const navigate = useNavigate();
 
-  // NEW: This useEffect hook runs when the component loads or when the user's data changes.
-  // It pre-fills the form with the user's details if they are logged in.
   useEffect(() => {
     if (profile) {
       setFullName(profile.full_name || '');
@@ -20,16 +17,14 @@ const BookingForm = ({ room, session, profile }) => {
     if (session) {
       setEmail(session.user.email || '');
     }
-  }, [session, profile]); // The dependency array ensures this runs when session/profile are available
+  }, [session, profile]); 
   useEffect(() => {
     if (checkIn && checkOut) {
       const startDate = new Date(checkIn);
       const endDate = new Date(checkOut);
       
-      // Calculate the difference in time (in milliseconds)
       const timeDiff = endDate.getTime() - startDate.getTime();
 
-      // Convert time difference from milliseconds to days
       const nights = Math.ceil(timeDiff / (1000 * 3600 * 24));
 
       if (nights > 0) {
@@ -43,7 +38,6 @@ const BookingForm = ({ room, session, profile }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    // This is where we will add the booking logic in the next step
     if (totalCost <= 0) {
       alert("Please select a valid date range.");
       return;
