@@ -10,7 +10,7 @@ import DiningDetailPage from './pages/DiningDetailPage';
 import HomePage from './pages/HomePage';
 import RoomDetailPage from './pages/RoomDetailPage';
 import LoginPage from './pages/LoginPage';
-import SetupProfile from './pages/SetUpProfile';
+import SetupProfile from './pages/SetupProfile';
 import PaymentPage from './pages/PaymentPage';
 import MyBookingsPage from './pages/MyBookingsPage';
 import ContactUsPage from './pages/ContactUsPage';
