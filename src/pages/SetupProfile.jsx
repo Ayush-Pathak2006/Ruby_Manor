@@ -1,20 +1,16 @@
-// src/pages/SetupProfile.jsx
-
-import React, { useState, useEffect } from 'react'; // NEW: Added useEffect
+import React, { useState, useEffect } from 'react'; 
 import { supabase } from '../services/supabaseClient';
 import { useNavigate } from 'react-router-dom';
 
 const SetupProfile = () => {
   const [fullName, setFullName] = useState('');
   const [loading, setLoading] = useState(false);
-  const [session, setSession] = useState(null); // NEW: Local session state
+  const [session, setSession] = useState(null);
   const navigate = useNavigate();
 
-  // NEW: Get the current session to access user metadata
   useEffect(() => {
     supabase.auth.getSession().then(({ data: { session } }) => {
       setSession(session);
-      // Pre-fill the name from Google if available
       if (session?.user?.user_metadata?.full_name) {
         setFullName(session.user.user_metadata.full_name);
       }
@@ -24,7 +20,6 @@ const SetupProfile = () => {
   const handleProfileSetup = async (e) => {
     e.preventDefault();
     setLoading(true);
-    // CHANGED: Using a try...catch...finally block for robust state handling
     try {
       if (!session?.user) throw new Error("Not authenticated!");
 
@@ -38,11 +33,10 @@ const SetupProfile = () => {
       if (error) throw error;
       
       alert('Profile saved successfully!');
-      navigate('/'); // Redirect after success
+      navigate('/'); 
     } catch (error) {
       alert(error.message);
     } finally {
-      // This will always run, ensuring the button is never stuck on "Saving..."
       setLoading(false);
     }
   };

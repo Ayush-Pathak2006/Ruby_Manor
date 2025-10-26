@@ -9,15 +9,15 @@ html {
 
 
 #page1 h1 {
-  position: relative; /* This is crucial for positioning the pseudo-element */
+  position: relative; 
 }
 
 #page1 h1::before {
-  content: attr(data-text); /* Copies the text from the data-text attribute */
+  content: attr(data-text); 
   position: absolute;
   top: -4px;
   left: -4px;
-  -webkit-text-stroke: 2px #ff4444; /* This creates the red outline */
+  -webkit-text-stroke: 2px #ff4444; 
   color: transparent;
   z-index: -1;
 }
@@ -27,6 +27,6 @@ html {
   display: none;
 }
 .hide-scrollbar {
-  -ms-overflow-style: none;  /* IE and Edge */
-  scrollbar-width: none;  /* Firefox */
+  -ms-overflow-style: none; 
+  scrollbar-width: none; 
 }

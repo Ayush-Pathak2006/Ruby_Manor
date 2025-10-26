@@ -1,5 +1,3 @@
-// src/components/Scroller.jsx
-
 import React from 'react';
 
 const Scroller = () => {

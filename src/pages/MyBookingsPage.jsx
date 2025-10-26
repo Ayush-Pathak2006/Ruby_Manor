@@ -1,12 +1,10 @@
-// src/pages/MyBookingsPage.jsx
-
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../services/supabaseClient';
 import { Link } from 'react-router-dom';
 
 const MyBookingsPage = () => {
   const [roomBookings, setRoomBookings] = useState([]);
-  const [reservations, setReservations] = useState([]); // NEW: State for dining reservations
+  const [reservations, setReservations] = useState([]); 
   const [waitlist, setWaitlist] = useState([]);
   const [loading, setLoading] = useState(true);
   const [userEmail, setUserEmail] = useState(null);
@@ -18,9 +16,8 @@ const MyBookingsPage = () => {
       
       if (session) {
         setUserEmail(session.user.email);
-        const userEmail = session.user.email; // Store email for queries
+        const userEmail = session.user.email; 
 
-        // --- 1. Fetch Room Bookings ---
         const { data: roomData, error: roomError } = await supabase
           .from('bookings')
           .select(`*, rooms ( room_type, image_url )`)
@@ -29,16 +26,14 @@ const MyBookingsPage = () => {
         if (roomError) console.error("Error fetching room bookings:", roomError);
         else setRoomBookings(roomData || []);
 
-        // --- 2. Fetch Dining Reservations ---
         const { data: reservationData, error: reservationError } = await supabase
           .from('reservations')
-          .select(`*, dining ( name, image_url )`) // Join with dining table
+          .select(`*, dining ( name, image_url )`) 
           .eq('user_email', userEmail);
 
         if (reservationError) console.error("Error fetching reservations:", reservationError);
         else setReservations(reservationData || []);
 
-        // --- 3. Fetch Waitlist Items ---
         const { data: waitlistData, error: waitlistError } = await supabase
           .from('waitlist_queue')
           .select(`*, rooms ( room_type, image_url )`)
@@ -65,13 +60,11 @@ const MyBookingsPage = () => {
  return (
     <div className="min-h-screen bg-gray-900 pt-36 px-4 md:px-12 pb-12">
       
-      {/* --- Section 1: Combined Bookings & Reservations --- */}
       <h1 className="text-5xl font-bold text-white mb-8 border-b border-gray-700 pb-4">Your Bookings & Reservations</h1>
       {(roomBookings.length === 0 && reservations.length === 0) ? (
         <p className="text-xl text-gray-400 mb-12">You have no bookings or reservations.</p>
       ) : (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-          {/* Display Room Bookings */}
           {roomBookings.map(booking => (
             <div key={`room-${booking.id}`} className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
               {booking.rooms ? (
@@ -91,7 +84,6 @@ const MyBookingsPage = () => {
             </div>
           ))}
 
-          {/* Display Dining Reservations */}
           {reservations.map(res => (
              <div key={`dining-${res.id}`} className="bg-gray-800 rounded-lg shadow-lg overflow-hidden">
                 {res.dining ? (
@@ -105,7 +97,6 @@ const MyBookingsPage = () => {
                       <p className={`mt-4 font-semibold ${res.status === 'confirmed' ? 'text-green-400' : 'text-yellow-400'}`}>
                         Status: {res.status?.charAt(0).toUpperCase() + res.status?.slice(1)}
                       </p>
-                      {/* Optional: Link back to the dining page */}
                       <Link to={`/dining/${res.dining_id}`} className="text-sm text-red-400 hover:underline mt-2 inline-block">View Menu</Link>
                     </div>
                   </>
@@ -115,7 +106,6 @@ const MyBookingsPage = () => {
         </div>
       )}
 
-      {/* --- Section 2: Waitlist --- */}
       <h1 className="text-4xl font-bold text-white mb-8 border-b border-gray-700 pb-4">Your Waitlist</h1>
       {waitlist.length === 0 ? (
         <p className="text-xl text-gray-400">You are not on any waitlists.</p>

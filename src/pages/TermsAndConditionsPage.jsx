@@ -1,5 +1,3 @@
-// src/pages/TermsAndConditionsPage.jsx
-
 import React from 'react';
 
 const TermsAndConditionsPage = () => {
@@ -7,8 +5,7 @@ const TermsAndConditionsPage = () => {
     <div className="min-h-screen bg-gray-900 text-white pt-36 pb-12 px-4 md:px-12">
       <div className="container mx-auto max-w-4xl">
         <h1 className="text-5xl font-bold mb-8 border-b border-gray-700 pb-4">Terms and Conditions</h1>
-        
-        {/* Introduction */}
+
         <section className="mb-8">
           <h2 className="text-3xl font-semibold text-red-400 mb-4">1. Introduction</h2>
           <p className="text-gray-300 leading-relaxed">
@@ -16,7 +13,6 @@ const TermsAndConditionsPage = () => {
           </p>
         </section>
 
-        {/* Bookings and Payments */}
         <section className="mb-8">
           <h2 className="text-3xl font-semibold text-red-400 mb-4">2. Bookings and Payments</h2>
           <p className="text-gray-300 leading-relaxed mb-2">
@@ -27,15 +23,12 @@ const TermsAndConditionsPage = () => {
           </p>
         </section>
 
-        {/* Check-in and Check-out */}
         <section className="mb-8">
           <h2 className="text-3xl font-semibold text-red-400 mb-4">3. Check-in and Check-out</h2>
           <p className="text-gray-300 leading-relaxed">
             Standard check-in time is 3:00 PM IST and check-out time is 11:00 AM IST. Early check-in and late check-out requests are subject to availability and may incur additional charges. Valid government-issued photo identification and a credit card may be required upon check-in.
           </p>
         </section>
-        
-        {/* Guest Conduct */}
         <section className="mb-8">
            <h2 className="text-3xl font-semibold text-red-400 mb-4">4. Guest Conduct</h2>
            <p className="text-gray-300 leading-relaxed">
@@ -43,7 +36,6 @@ const TermsAndConditionsPage = () => {
            </p>
         </section>
 
-        {/* Limitation of Liability */}
         <section className="mb-8">
           <h2 className="text-3xl font-semibold text-red-400 mb-4">5. Limitation of Liability</h2>
           <p className="text-gray-300 leading-relaxed">
@@ -51,7 +43,6 @@ const TermsAndConditionsPage = () => {
           </p>
         </section>
 
-        {/* Changes to Terms */}
         <section>
           <h2 className="text-3xl font-semibold text-red-400 mb-4">6. Changes to Terms</h2>
           <p className="text-gray-300 leading-relaxed">

@@ -32,7 +32,6 @@ const RoomDetailPage = () => {
 
   return (
     <>
-      {/* <Navbar /> */}
       <div className="pt-28 bg-gray-900 text-white min-h-screen">
         <ImageCarousel room={room} />
         <section className="container mx-auto my-12 p-4 flex flex-col md:flex-row gap-8">
@@ -44,7 +43,6 @@ const RoomDetailPage = () => {
           </div>
         </section>
       </div>
-      {/* <Footer /> */}
     </>
   );
 };

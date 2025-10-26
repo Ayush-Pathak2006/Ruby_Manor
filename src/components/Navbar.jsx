@@ -1,7 +1,4 @@
-// src/components/Navbar.jsx
-
 import React, { useState, useLayoutEffect, useRef } from "react";
-// NEW: Import useLocation to check the current URL
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { supabase } from "../services/supabaseClient";
 import { gsap } from "gsap";
@@ -13,14 +10,11 @@ const Navbar = ({ session, profile }) => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const navRef = useRef(null);
   const navigate = useNavigate();
-  // NEW: Get the current page's location
   const location = useLocation();
 
-  // NEW: Check if the current page is the homepage
   const isHomePage = location.pathname === "/";
 
   useLayoutEffect(() => {
-    // CHANGED: Only run the scroll animation if we are on the homepage
     if (isHomePage) {
       const ctx = gsap.context(() => {
         gsap.to(navRef.current, {
@@ -36,7 +30,7 @@ const Navbar = ({ session, profile }) => {
       }, navRef);
       return () => ctx.revert();
     }
-  }, [isHomePage]); // Dependency array ensures this effect re-evaluates if the page changes
+  }, [isHomePage]); 
 
   const handleLogout = async () => {
     await supabase.auth.signOut();
@@ -44,7 +38,6 @@ const Navbar = ({ session, profile }) => {
     navigate("/");
   };
 
-  // CHANGED: The navbar's class is now dynamic. It's transparent on the homepage and solid black everywhere else.
   const navClassName = `w-full h-[110px] fixed top-0 left-0 z-[999] flex items-center justify-between px-4 md:px-24 transition-colors duration-300 ${
     isHomePage ? "bg-transparent " : "bg-gray-950 "
   }`;
@@ -52,7 +45,6 @@ const Navbar = ({ session, profile }) => {
   return (
     <>
       <nav ref={navRef} className={navClassName}>
-        {/* LEFT SIDE: Logo and Navigation Links */}
         <div className="flex items-center gap-10">
            <a href="/#about-us" className="cursor-pointer">
             <img src="/hotel.svg" alt="Ruby Manor Logo" className="h-16" />
@@ -67,13 +59,12 @@ const Navbar = ({ session, profile }) => {
             <a href="/#dining" className="cursor-pointer">
               Dining
             </a>
-            {session && ( // Only show if user is logged in
+            {session && ( 
         <Link to="/my-bookings" className="cursor-pointer">Your Bookings</Link>
     )}
           </div>
         </div>
 
-        {/* RIGHT SIDE: User Greeting, Login/Logout Buttons */}
         <div className="hidden md:flex items-center">
           {session ? (
             <div className="flex items-center gap-4">
@@ -96,9 +87,6 @@ const Navbar = ({ session, profile }) => {
             </Link>
           )}
         </div>
-
-        {/* Burger Menu and Mobile Menu Overlay... (no changes here) */}
-        {/* ... */}
 
         <div className="md:hidden">
           <button
@@ -163,8 +151,6 @@ const Navbar = ({ session, profile }) => {
 )}
 
           <div className="border-t border-gray-600 w-3/4 my-4"></div>
-
-          {/* Conditional Login/Logout for Mobile Menu */}
           {session ? (
             <div className="flex flex-col items-center gap-4">
               <p className="text-lg normal-case">
@@ -181,7 +167,6 @@ const Navbar = ({ session, profile }) => {
           )}
         </div>
       </div>
-      {/* ... */}
     </>
   );
 };

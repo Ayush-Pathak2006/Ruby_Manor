@@ -44,12 +44,9 @@ const Rooms = () => {
           <p className="text-white text-2xl font-semibold text-center h-96 flex items-center justify-center">Loading Rooms...</p>
         ) : (
           <>
-            {/* --- MOBILE CAROUSEL --- */}
             <div className="md:hidden relative">
               <div ref={roomsScrollContainer} className="flex overflow-x-auto snap-x snap-mandatory hide-scrollbar">
                 {rooms.map(room => (
-                  // CHANGED: Simplified this structure.
-                  // We apply padding and width directly to the scrolling item.
                   <div key={room.id} className="w-full flex-shrink-0 snap-center p-4">
                     <RoomCard room={room} />
                   </div>
@@ -58,8 +55,6 @@ const Rooms = () => {
               <button onClick={() => scrollRooms('left')} className="absolute top-1/2 left-0 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 mx-2">{'<'}</button>
               <button onClick={() => scrollRooms('right')} className="absolute top-1/2 right-0 transform -translate-y-1/2 bg-black/50 text-white p-2 rounded-full z-10 mx-2">{'>'}</button>
             </div>
-
-            {/* --- DESKTOP GRID --- */}
             <div id="cards-container" className="hidden min-h-[60vh] md:flex flex-wrap items-center justify-center gap-8 md:gap-16 px-8">
               {rooms.map(room => <RoomCard key={room.id} room={room} />)}
             </div>

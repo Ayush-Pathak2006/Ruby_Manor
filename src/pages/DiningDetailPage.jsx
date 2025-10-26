@@ -1,34 +1,28 @@
-// src/pages/DiningDetailPage.jsx
 
 import React, { useState, useEffect } from 'react';
-// NEW: Import useNavigate and useOutletContext
 import { useParams, useNavigate, useOutletContext } from 'react-router-dom';
 import { supabase } from '../services/supabaseClient';
 
 const DiningDetailPage = () => {
   const { id } = useParams();
-  // NEW: Get session and profile from Layout
   const { session, profile } = useOutletContext();
-  const navigate = useNavigate(); // For navigation
+  const navigate = useNavigate(); 
   
   const [diningOption, setDiningOption] = useState(null);
   const [menuItems, setMenuItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
-  // --- NEW: State for Reservation Form ---
   const [fullName, setFullName] = useState('');
   const [email, setEmail] = useState('');
   const [numberOfPeople, setNumberOfPeople] = useState(1);
   const [reservationDate, setReservationDate] = useState('');
-  const [totalCost, setTotalCost] = useState(399); // Initial cost for 1 person
+  const [totalCost, setTotalCost] = useState(399); 
 
-  // Pre-fill name and email if logged in
   useEffect(() => {
     if (profile) setFullName(profile.full_name || '');
     if (session) setEmail(session.user.email || '');
   }, [session, profile]);
 
-  // Fetch dining and menu data
   useEffect(() => {
     const fetchData = async () => {
       setLoading(true);
@@ -52,7 +46,6 @@ const DiningDetailPage = () => {
     fetchData();
   }, [id]);
 
-  // Calculate total cost when number of people changes
   useEffect(() => {
     const guests = parseInt(numberOfPeople, 10);
     if (guests > 0) {
@@ -62,13 +55,11 @@ const DiningDetailPage = () => {
     }
   }, [numberOfPeople]);
 
-  // Group menu items by category
   const groupedMenu = menuItems.reduce((acc, item) => {
     (acc[item.category] = acc[item.category] || []).push(item);
     return acc;
   }, {});
 
-  // --- NEW: Handle Reservation Form Submission ---
   const handleReservationSubmit = (e) => {
     e.preventDefault();
     if (!session) {
@@ -81,12 +72,10 @@ const DiningDetailPage = () => {
        return;
     }
 
-    // Navigate to the payment page with dining reservation details
     navigate('/payment', {
       state: {
-        // Indicate this is a dining reservation
         bookingType: 'dining', 
-        diningOption, // Pass the restaurant details
+        diningOption, 
         fullName,
         email,
         reservationDate,
@@ -106,7 +95,6 @@ const DiningDetailPage = () => {
 
   return (
     <div className="min-h-screen bg-gray-900 text-white ">
-      {/* ... Hero Section ... */}
        <div className="h-[50vh] relative mb-12">
         <img src={diningOption.image_url} alt={diningOption.name} className="absolute inset-0 w-full h-full object-cover opacity-40"/>
         <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-transparent to-transparent"></div>
@@ -116,14 +104,9 @@ const DiningDetailPage = () => {
         </div>
       </div>
 
-
-      {/* Main Content Area (Menu + Reservation) */}
       <div className="container mx-auto px-6 pb-16 flex flex-col md:flex-row gap-12">
-        
-        {/* Menu Section (Left Side) */}
         <div className="md:w-2/3">
           <h2 className="text-4xl font-bold mb-8 border-b-2 border-red-500 pb-2 inline-block">Menu</h2>
-          {/* ... Menu rendering logic ... */}
              {Object.keys(groupedMenu).length === 0 ? (
                 <p className="text-gray-400">Menu currently unavailable.</p>
                 ) : (
@@ -145,8 +128,6 @@ const DiningDetailPage = () => {
                 ))
             )}
         </div>
-
-        {/* --- NEW: Reservation Form (Right Side) --- */}
         <div className="md:w-1/3">
       <div className="sticky top-32 bg-gray-800 p-8 rounded-lg shadow-lg">
         <h2 className="text-3xl font-bold mb-6 border-b-2 border-red-500 pb-2">Make a Reservation</h2>
@@ -156,7 +137,7 @@ const DiningDetailPage = () => {
             <input
               type="text" id="resName" value={fullName}
               onChange={(e) => setFullName(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" // REMOVED disabled/readonly
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" 
               required
             />
           </div>
@@ -165,7 +146,7 @@ const DiningDetailPage = () => {
             <input
               type="email" id="resEmail" value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" // REMOVED disabled/readonly
+              className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" 
               required
             />
           </div>
@@ -190,7 +171,6 @@ const DiningDetailPage = () => {
                  </div>
               </div>
 
-              {/* Display Total Cost */}
               {totalCost > 0 && (
                 <div className="my-6 text-center">
                   <p className="text-lg text-gray-300">Total Reservation Cost:</p>
