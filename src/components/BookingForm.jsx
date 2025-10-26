@@ -86,7 +86,7 @@ const BookingForm = ({ room, session, profile }) => {
         {totalCost > 0 && (
           <div className="my-6 text-center">
             <p className="text-lg text-gray-300">Total Estimated Cost:</p>
-            <p className="text-4xl font-bold text-red-400">${totalCost}</p>
+            <p className="text-4xl font-bold text-red-400">Rs {totalCost}</p>
           </div>
         )}
         <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded transition-colors duration-300">
