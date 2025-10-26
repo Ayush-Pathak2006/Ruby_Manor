@@ -15,7 +15,7 @@ const Footer = () => {
         <img src="/hotel.svg" alt="Ruby Manor Logo" className="h-24" />
       </div>
       <div id="f2" className="flex flex-col gap-2">
-        <a href="https://www.linkedin.com/in/ayush-pathak-75a985293/">
+        <a href="https://www.linkedin.com/in/ayush-pathak-75a985293/" target="_blank">
         <h3 className="text-2xl font-black uppercase">Follow Us</h3>
         </a>
         <Link to="/terms" className="text-2xl font-black uppercase">Terms & Policies</Link>
