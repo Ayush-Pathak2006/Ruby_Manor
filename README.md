@@ -62,7 +62,6 @@ Follow these steps to set up the project locally:
 
 3.  **Set up Supabase:**
     * Create a project on [Supabase](https://supabase.com/).
-    * Enable Row Level Security (RLS) on all tables and apply the necessary policies (refer to our chat history for the SQL commands).
     * Upload images to Supabase Storage and update the `image_url` fields in your `rooms` and `dining` tables.
     * Configure Google OAuth provider in Supabase Authentication settings and get your Client ID/Secret from Google Cloud Console.
     * Update Authorized Redirect URIs in Google Cloud Console with your Supabase callback URL and your local development URL (e.g., `http://localhost:5173`).
