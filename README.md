@@ -62,7 +62,6 @@ Follow these steps to set up the project locally:
 
 3.  **Set up Supabase:**
     * Create a project on [Supabase](https://supabase.com/).
-    * Use the SQL scripts provided in the project (or run the `CREATE TABLE` and `ALTER TABLE` commands from our chat) to set up the `rooms`, `dining`, `menu_items`, `bookings`, `reservations`, `waitlist_queue`, `profiles`, and `feedback` tables.
     * Enable Row Level Security (RLS) on all tables and apply the necessary policies (refer to our chat history for the SQL commands).
     * Upload images to Supabase Storage and update the `image_url` fields in your `rooms` and `dining` tables.
     * Configure Google OAuth provider in Supabase Authentication settings and get your Client ID/Secret from Google Cloud Console.
