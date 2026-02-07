@@ -120,7 +120,7 @@ const DiningDetailPage = () => {
                             <h4 className="text-xl font-bold">{item.name}</h4>
                             {item.description && <p className="text-gray-400 text-sm mt-1">{item.description}</p>}
                             </div>
-                            <p className="text-xl font-semibold text-red-400 ml-4">${item.price}</p>
+                            <p className="text-xl font-semibold text-red-400 ml-4">₹{item.price}</p>
                         </div>
                         ))}
                     </div>

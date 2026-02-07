@@ -15,7 +15,7 @@ const RoomCard = ({ room }) => {
         <div className="absolute inset-0 w-full h-full p-6 flex flex-col justify-end bg-gradient-to-t from-black/80 to-transparent">
           <div className="transform transition-transform duration-500 group-hover:-translate-y-2 group-active:-translate-y-2">
             <h4 className="text-white text-3xl font-extrabold">{room.room_type}</h4>
-            <p className="text-gray-200">Rs {room.price_per_night} / night</p>
+            <p className="text-gray-200">₹{room.price_per_night} / night</p>
           </div>
         </div>
       </div>

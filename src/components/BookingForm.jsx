@@ -60,7 +60,7 @@ const BookingForm = ({ room, session, profile }) => {
       <h3 className="text-2xl font-bold mb-6 border-b-2 border-red-500 pb-2">Book Your Stay</h3>
       <div className="mb-4">
         <span className="text-lg font-semibold block">{room.room_type}</span>
-        <span className="text-red-400 text-xl font-bold">Rs {room.price_per_night} / night</span>
+        <span className="text-red-400 text-xl font-bold">₹{room.price_per_night} / night</span>
       </div>
       <form onSubmit={handleSubmit}>
         <div className="mb-4">
@@ -86,7 +86,7 @@ const BookingForm = ({ room, session, profile }) => {
         {totalCost > 0 && (
           <div className="my-6 text-center">
             <p className="text-lg text-gray-300">Total Estimated Cost:</p>
-            <p className="text-4xl font-bold text-red-400">Rs {totalCost}</p>
+            <p className="text-4xl font-bold text-red-400">₹{totalCost}</p>
           </div>
         )}
         <button type="submit" className="w-full bg-red-600 hover:bg-red-700 text-white font-bold py-3 rounded transition-colors duration-300">
