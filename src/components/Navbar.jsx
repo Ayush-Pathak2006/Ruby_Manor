@@ -47,7 +47,7 @@ const Navbar = ({ session, profile }) => {
       <nav ref={navRef} className={navClassName}>
         <div className="flex items-center gap-10">
            <a href="/#about-us" className="cursor-pointer">
-            <img src="/Logo.png" alt="Ruby Manor Logo" className="h-16" />
+            <img src="/hotel.svg" alt="Ruby Manor Logo" className="h-16" />
           </a>
           <div className="hidden md:flex items-center gap-8 text-white uppercase font-semibold">
             <a href="/#about-us" className="cursor-pointer">
