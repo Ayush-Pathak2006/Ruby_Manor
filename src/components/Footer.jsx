@@ -12,7 +12,7 @@ const Footer = () => {
       className="w-full bg-gradient-to-r from-red-700 via-red-500 to-red-800 text-black p-8 md:p-16 flex flex-wrap justify-between gap-8"
     >
       <div id="f1">
-        <img src="/Hotel-Logo.webp" alt="Ruby Manor Logo" className="h-24" />
+        <img src="/Logo.png" alt="Ruby Manor Logo" className="h-24" />
       </div>
       <div id="f2" className="flex flex-col gap-2">
         <a href="https://www.linkedin.com/in/ayush-pathak-75a985293/" target="_blank">
