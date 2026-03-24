@@ -28,26 +28,6 @@ const LoginPage = () => {
           </button>
         </div>
       </div>
-
-      {showIssuePopup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 px-4">
-          <div className="w-full max-w-lg rounded-xl border border-red-400/40 bg-red-950 p-6 text-left shadow-2xl">
-            <h2 className="text-2xl font-bold text-red-100">Login Temporarily Unavailable</h2>
-            <p className="mt-3 text-red-100/90">
-              We are currently facing a Supabase service issue affecting login in India.
-              Please try again later.
-            </p>
-            <div className="mt-6 flex justify-end">
-              <button
-                onClick={() => setShowIssuePopup(false)}
-                className="rounded-md bg-red-200 px-4 py-2 font-semibold text-red-900 hover:bg-red-100"
-              >
-                Dismiss
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
     </>
   );
 };
