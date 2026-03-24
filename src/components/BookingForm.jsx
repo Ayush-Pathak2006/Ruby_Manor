@@ -38,6 +38,13 @@ const BookingForm = ({ room, session, profile }) => {
 
   const handleSubmit = (e) => {
     e.preventDefault();
+
+    const today = new Date().toISOString().split('T')[0];
+    if (checkIn < today || checkOut < today) {
+      alert("Check-in and Check-out dates cannot be in the past.");
+      return;
+    }
+
     if (totalCost <= 0) {
       alert("Please select a valid date range.");
       return;
@@ -76,11 +83,15 @@ const BookingForm = ({ room, session, profile }) => {
         <div className="flex gap-4 mb-6">
           <div className="w-1/2">
             <label htmlFor="checkin" className="block text-sm font-medium mb-1">Check-in</label>
-            <input type="date" id="checkin" value={checkIn} onChange={(e) => setCheckIn(e.target.value)}className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required/>
+            <input type="date" id="checkin" value={checkIn} onChange={(e) => setCheckIn(e.target.value)}
+            min= {new Date().toISOString().split('T')[0]}
+            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required/>
           </div>
           <div className="w-1/2">
             <label htmlFor="checkout" className="block text-sm font-medium mb-1">Check-out</label>
-            <input type="date" id="checkout" value={checkOut} onChange={(e) => setCheckOut(e.target.value)} className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required/>
+            <input type="date" id="checkout" value={checkOut} onChange={(e) => setCheckOut(e.target.value)}
+            min={checkIn || new Date().toISOString().split('T')[0]}
+            className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500" required/>
           </div>
         </div>
         {totalCost > 0 && (

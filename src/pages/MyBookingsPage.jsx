@@ -16,20 +16,22 @@ const MyBookingsPage = () => {
       
       if (session) {
         setUserEmail(session.user.email);
-        const userEmail = session.user.email; 
+        const userEmail = session.user.email;
+        const today = new Date().toISOString().split('T')[0]; 
 
         const { data: roomData, error: roomError } = await supabase
           .from('bookings')
           .select(`*, rooms ( room_type, image_url )`)
-          .eq('customer_email', userEmail);
-        
+          .eq('customer_email', userEmail)
+          .gte('check_out_date', today);
         if (roomError) console.error("Error fetching room bookings:", roomError);
         else setRoomBookings(roomData || []);
 
         const { data: reservationData, error: reservationError } = await supabase
           .from('reservations')
           .select(`*, dining ( name, image_url )`) 
-          .eq('user_email', userEmail);
+          .eq('user_email', userEmail)
+          .gte('reservation_date', today);
 
         if (reservationError) console.error("Error fetching reservations:", reservationError);
         else setReservations(reservationData || []);
@@ -37,7 +39,8 @@ const MyBookingsPage = () => {
         const { data: waitlistData, error: waitlistError } = await supabase
           .from('waitlist_queue')
           .select(`*, rooms ( room_type, image_url )`)
-          .eq('customer_email', userEmail);
+          .eq('customer_email', userEmail)
+          .gte('requested_check_in', today);
           
         if (waitlistError) console.error("Error fetching waitlist:", waitlistError);
         else setWaitlist(waitlistData || []);

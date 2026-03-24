@@ -1,20 +1,23 @@
-import React, { useState } from 'react';
-import { useLocation, useNavigate, useOutletContext } from 'react-router-dom';
-import { supabase } from '../services/supabaseClient'; 
+import React, { useState } from "react";
+import { useLocation, useNavigate, useOutletContext } from "react-router-dom";
+import { supabase } from "../services/supabaseClient";
 
 const PaymentPage = () => {
   const location = useLocation();
   const navigate = useNavigate();
-  const { session } = useOutletContext(); 
+  const { session } = useOutletContext();
 
   const {
-    bookingType = 'room',
+    bookingType = "room",
     room,
     diningOption,
-    fullName, email,
-    checkIn, checkOut,
-    reservationDate, numberOfPeople,
-    totalCost
+    fullName,
+    email,
+    checkIn,
+    checkOut,
+    reservationDate,
+    numberOfPeople,
+    totalCost,
   } = location.state || {};
 
   const [isProcessing, setIsProcessing] = useState(false);
@@ -24,135 +27,203 @@ const PaymentPage = () => {
     if (!session) {
       alert("Authentication error: Session not found. Please log in again.");
       setIsProcessing(false);
-      navigate('/login');
+      navigate("/login");
       return;
     }
 
     try {
-      let confirmationMessage = '';
-      let dbOperationSuccessful = false; 
+      let confirmationMessage = "";
+      let dbOperationSuccessful = false;
 
-      if (bookingType === 'dining') {
-        const { error: insertError } = await supabase.from('reservations').insert({
-          user_id: session.user.id,
-          user_email: email,
-          dining_id: diningOption.id,
-          reservation_date: reservationDate,
-          number_of_people: numberOfPeople,
-          total_cost: totalCost,
-          status: 'confirmed',
-        });
-        if (insertError) throw insertError;
-        dbOperationSuccessful = true; 
-        confirmationMessage = `Dining reservation at ${diningOption.name} confirmed for ${numberOfPeople} person(s) on ${reservationDate}!`;
-
-      } else { 
-        const { data: roomData, error: roomError } = await supabase.from('rooms').select('total_quantity').eq('id', room.id).single();
-        if (roomError) throw roomError;
-        const { count: bookedCount, error: bookingError } = await supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('room_id', room.id).lt('check_in_date', checkOut).gt('check_out_date', checkIn);
-        if (bookingError) throw bookingError;
-
-        if (bookedCount < roomData.total_quantity) {
-          const { error: insertError } = await supabase.from('bookings').insert({
-            room_id: room.id,
-            customer_name: fullName,
-            customer_email: email,
-            check_in_date: checkIn,
-            check_out_date: checkOut,
-            status: 'confirmed',
-            booking_type: 'room',
+      if (bookingType === "dining") {
+        const { error: insertError } = await supabase
+          .from("reservations")
+          .insert({
+            user_id: session.user.id,
+            user_email: email,
+            dining_id: diningOption.id,
+            reservation_date: reservationDate,
+            number_of_people: numberOfPeople,
+            total_cost: totalCost,
+            status: "confirmed",
           });
-          if (insertError) throw insertError;
-          dbOperationSuccessful = true;
-          confirmationMessage = `Room booking confirmed for ${checkIn} to ${checkOut}!`;
-        } else {
-          const { error: waitlistError } = await supabase.from('waitlist_queue').insert({ room_id: room.id, customer_name: fullName, customer_email: email, requested_check_in: checkIn, requested_check_out: checkOut });
-          if (waitlistError) throw waitlistError;
-          dbOperationSuccessful = true; 
-          confirmationMessage = "This room is full. You've been added to the waitlist.";
+        if (insertError) throw insertError;
+        dbOperationSuccessful = true;
+        confirmationMessage = `Dining reservation at ${diningOption.name} confirmed for ${numberOfPeople} person(s) on ${reservationDate}!`;
+      } else {
+        const today = new Date().toISOString().split("T")[0];
+        if (checkIn < today || checkIn >= checkOut) {
+          alert("Invalid booking dates.");
+          setIsProcessing(false);
+          return;
         }
+
+        // const { data: roomData, error: roomError } = await supabase.from('rooms').select('total_quantity').eq('id', room.id).single();
+        // if (roomError) throw roomError;
+        // const { count: bookedCount, error: bookingError } = await supabase.from('bookings').select('*', { count: 'exact', head: true }).eq('room_id', room.id).lt('check_in_date', checkOut).gt('check_out_date', checkIn);
+        // if (bookingError) throw bookingError;
+
+        // if (bookedCount < roomData.total_quantity) {
+        //   const { error: insertError } = await supabase.from('bookings').insert({
+        //     room_id: room.id,
+        //     customer_name: fullName,
+        //     customer_email: email,
+        //     check_in_date: checkIn,
+        //     check_out_date: checkOut,
+        //     status: 'confirmed',
+        //     booking_type: 'room',
+        //   });
+        //   if (insertError) throw insertError;
+        //   dbOperationSuccessful = true;
+        //   confirmationMessage = `Room booking confirmed for ${checkIn} to ${checkOut}!`;
+        // } else {
+        //   alert("Sorry, this room type is fully booked for the selected dates. You have been added to the waitlist.");
+        //   setIsProcessing(false);
+        //   return;
+        // }
+
+        // Atomic booking with stored procedure
+        const { data, error } = await supabase.rpc("create_room_booking", {
+          p_room_id: room.id,
+          p_customer_name: fullName,
+          p_customer_email: email,
+          p_check_in_date: checkIn,
+          p_check_out_date: checkOut,
+          p_user_id: session.user.id,
+        });
+
+        if (error) throw error;
+
+        if (!data[0].success) {
+          alert(
+            "Room not available on this date. Please choose different dates or room.",
+          );
+          setIsProcessing(false);
+          return;
+        }
+        const bookingId = data[0].booking_id;
+        dbOperationSuccessful = true;
+        confirmationMessage = `Room booking confirmed for ${checkIn} to ${checkOut}!`;
       }
 
       if (dbOperationSuccessful) {
         console.log("Database save successful. Attempting to send email...");
-        
-        let emailDetails = '';
-        let bookingDate = '';
-        if (bookingType === 'dining') {
-            emailDetails = `Reservation for ${numberOfPeople} guest(s) at ${diningOption.name}.`;
-            bookingDate = reservationDate;
-        } else { 
-            emailDetails = bookingType === 'room'
+
+        let emailDetails = "";
+        let bookingDate = "";
+        if (bookingType === "dining") {
+          emailDetails = `Reservation for ${numberOfPeople} guest(s) at ${diningOption.name}.`;
+          bookingDate = reservationDate;
+        } else {
+          emailDetails =
+            bookingType === "room"
               ? `Booking for room: ${room.room_type}. Check-out: ${checkOut}.`
               : `Waitlist request for room: ${room.room_type}. Requested Check-in: ${checkIn}.`;
-            bookingDate = checkIn;
+          bookingDate = checkIn;
         }
 
-        const { data: emailResponse, error: emailError } = await supabase.functions.invoke('send-confirmation-email', {
-          body: JSON.stringify({
-            name: fullName,
-            email: email,
-            date: bookingDate,
-            details: emailDetails,
-            type: bookingType, 
-          }),
-        });
+        const { data: emailResponse, error: emailError } =
+          await supabase.functions.invoke("send-confirmation-email", {
+            body: JSON.stringify({
+              name: fullName,
+              email: email,
+              date: bookingDate,
+              details: emailDetails,
+              type: bookingType,
+            }),
+          });
 
         if (emailError) {
           console.error("Error invoking email function:", emailError);
-          alert(confirmationMessage + " (There was an issue sending the confirmation email, but your booking/reservation is saved).");
+          alert(
+            confirmationMessage +
+              " (There was an issue sending the confirmation email, but your booking/reservation is saved).",
+          );
         } else {
           console.log("Email function response:", emailResponse);
           alert(confirmationMessage + " An email confirmation has been sent.");
         }
       }
 
-      navigate('/my-bookings');
-
-    } catch (error) { 
+      navigate("/my-bookings");
+    } catch (error) {
       console.error("Full booking/reservation error object:", error);
-      alert("Could not save your booking/reservation. Error: " + (error?.message || JSON.stringify(error)));
-      setIsProcessing(false); 
-    } 
+      alert(
+        "Could not save your booking/reservation. Error: " +
+          (error?.message || JSON.stringify(error)),
+      );
+      setIsProcessing(false);
+    }
   };
 
   if (!location.state) {
-    return <div className="h-screen flex items-center justify-center">Invalid booking details. Please go back and try again.</div>;
+    return (
+      <div className="h-screen flex items-center justify-center">
+        Invalid booking details. Please go back and try again.
+      </div>
+    );
   }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-900 pt-28">
       <div className="text-center p-10 bg-gray-800 rounded-lg shadow-xl w-full max-w-lg">
-        <h1 className="text-white text-4xl font-bold mb-4">Confirm Your {bookingType === 'dining' ? 'Reservation' : 'Booking'}</h1>
+        <h1 className="text-white text-4xl font-bold mb-4">
+          Confirm Your {bookingType === "dining" ? "Reservation" : "Booking"}
+        </h1>
         <div className="text-left text-lg text-gray-300 mb-6 border-y border-gray-600 py-4">
-          {bookingType === 'dining' ? (
-             <>
-                <p><strong>Restaurant:</strong> {diningOption?.name}</p> 
-                <p><strong>Name:</strong> {fullName}</p>
-                <p><strong>Date:</strong> {reservationDate}</p>
-                <p><strong>Guests:</strong> {numberOfPeople}</p>
-             </>
+          {bookingType === "dining" ? (
+            <>
+              <p>
+                <strong>Restaurant:</strong> {diningOption?.name}
+              </p>
+              <p>
+                <strong>Name:</strong> {fullName}
+              </p>
+              <p>
+                <strong>Date:</strong> {reservationDate}
+              </p>
+              <p>
+                <strong>Guests:</strong> {numberOfPeople}
+              </p>
+            </>
           ) : (
-             <>
-                <p><strong>Room:</strong> {room?.room_type}</p> 
-                <p><strong>Name:</strong> {fullName}</p>
-                <p><strong>Dates:</strong> {checkIn} to {checkOut}</p>
-             </>
+            <>
+              <p>
+                <strong>Room:</strong> {room?.room_type}
+              </p>
+              <p>
+                <strong>Name:</strong> {fullName}
+              </p>
+              <p>
+                <strong>Dates:</strong> {checkIn} to {checkOut}
+              </p>
+            </>
           )}
-          <p className="text-2xl font-bold mt-2"><strong>Total:</strong> <span className="text-red-400">₹{totalCost}</span></p>
+          <p className="text-2xl font-bold mt-2">
+            <strong>Total:</strong>{" "}
+            <span className="text-red-400">₹{totalCost}</span>
+          </p>
         </div>
 
-        <h2 className="text-white text-2xl font-semibold mb-4">Scan to Pay with UPI</h2>
-        <img src="/my-qr-code.jpg" alt="UPI QR Code for payment" className="mx-auto w-64 h-64 rounded-lg mb-6" />
+        <h2 className="text-white text-2xl font-semibold mb-4">
+          Scan to Pay with UPI
+        </h2>
+        <img
+          src="/my-qr-code.jpg"
+          alt="UPI QR Code for payment"
+          className="mx-auto w-64 h-64 rounded-lg mb-6"
+        />
 
         <button
           onClick={handleConfirmPayment}
-          disabled={isProcessing || !session} 
+          disabled={isProcessing || !session}
           className="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 rounded transition-colors duration-300 disabled:bg-gray-500"
         >
-          {isProcessing ? 'Processing...' : 'I Have Paid, Confirm Booking'}
+          {isProcessing ? "Processing..." : "I Have Paid, Confirm Booking"}
         </button>
-        {!session && <p className="text-red-400 mt-4">Please log in to confirm.</p>}
+        {!session && (
+          <p className="text-red-400 mt-4">Please log in to confirm.</p>
+        )}
       </div>
     </div>
   );

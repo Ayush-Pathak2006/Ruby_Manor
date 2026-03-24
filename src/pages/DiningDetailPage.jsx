@@ -67,6 +67,12 @@ const DiningDetailPage = () => {
       navigate('/login');
       return;
     }
+    const today = new Date().toISOString().split('T')[0];
+    if(reservationDate < today){
+      alert("Reservation date cannot be in the past.");
+      return;
+    }
+
     if (totalCost <= 0 || !reservationDate) {
        alert("Please select the number of people and a valid date.");
        return;
@@ -165,6 +171,7 @@ const DiningDetailPage = () => {
                     <input
                       type="date" id="resDate" value={reservationDate}
                       onChange={(e) => setReservationDate(e.target.value)}
+                      min={new Date().toISOString().split('T')[0]}
                       className="w-full p-2 rounded bg-gray-700 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-red-500"
                       required
                     />
