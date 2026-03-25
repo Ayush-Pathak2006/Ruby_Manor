@@ -111,7 +111,7 @@ const MyBookingsPage = () => {
         </div>
       )}
 
-      <h1 className="text-4xl font-bold text-white mb-8 border-b border-gray-700 pb-4">Your Waitlist</h1>
+      {/* <h1 className="text-4xl font-bold text-white mb-8 border-b border-gray-700 pb-4">Your Waitlist</h1>
       {waitlist.length === 0 ? (
         <p className="text-xl text-gray-400">You are not on any waitlists.</p>
       ) : (
@@ -133,7 +133,7 @@ const MyBookingsPage = () => {
             </div>
           ))}
         </div>
-      )}
+      )} */}
     </div>
   );
 };
