@@ -40,7 +40,9 @@ const MyBookingsPage = () => {
           .from('waitlist_queue')
           .select(`*, rooms ( room_type, image_url )`)
           .eq('customer_email', userEmail)
-          .gte('requested_check_in', today);
+          .gte('requested_check_in', today)
+          .order('requested_check_in', { ascending: true })
+          .order('waitlist_position', { ascending: true });
           
         if (waitlistError) console.error("Error fetching waitlist:", waitlistError);
         else setWaitlist(waitlistData || []);
@@ -121,8 +123,8 @@ const MyBookingsPage = () => {
                   <img src={item.rooms.image_url} alt={item.rooms.room_type} className="w-full h-48 object-cover opacity-60" />
                   <div className="p-6">
                     <h2 className="text-2xl font-bold text-white">{item.rooms.room_type}</h2>
-                    <p className="text-gray-300 mt-2"><strong>Requested Date:</strong> {item.requested_check_in}</p>
-                    <p className="mt-4 text-lg font-semibold text-yellow-400">Status: Waitlisted</p>
+                    <p className="text-gray-300 mt-2"><strong>Requested Date:</strong> {item.requested_date}</p>
+                    <p className="mt-4 text-lg font-semibold text-yellow-400">Status: Waitlisted #{item.waitlist_position}</p>
                   </div>
                 </>
               ) : (

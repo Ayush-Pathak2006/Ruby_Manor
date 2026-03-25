@@ -23,6 +23,7 @@ const PaymentPage = () => {
   const [isProcessing, setIsProcessing] = useState(false);
 
   const handleConfirmPayment = async () => {
+    let isRoomWaitlisted = false;
     setIsProcessing(true);
     if (!session) {
       alert("Authentication error: Session not found. Please log in again.");
@@ -94,16 +95,26 @@ const PaymentPage = () => {
 
         if (error) throw error;
 
-        if (!data[0].success) {
+        const result = Array.isArray(data) ? data[0] : data;
+
+        if (result?.is_waitlisted) {
+          isRoomWaitlisted = true;
+          dbOperationSuccessful = true;
+          confirmationMessage = `Room unavailable for ${checkIn}. You are on the waitlist at position #${result.waitlist_position}.`;
+        } else if (result?.success) {
+          dbOperationSuccessful = true;
+          confirmationMessage = `Room booking confirmed for ${checkIn} to ${checkOut}!`;
+        } else {
           alert(
-            "Room not available on this date. Please choose different dates or room.",
+            result?.message ||
+              "Room not available on this date. Please choose different dates or room.",
           );
           setIsProcessing(false);
           return;
         }
-        const bookingId = data[0].booking_id;
-        dbOperationSuccessful = true;
-        confirmationMessage = `Room booking confirmed for ${checkIn} to ${checkOut}!`;
+        // const bookingId = data[0].booking_id;
+        // dbOperationSuccessful = true;
+        // confirmationMessage = `Room booking confirmed for ${checkIn} to ${checkOut}!`;
       }
 
       if (dbOperationSuccessful) {
@@ -115,10 +126,9 @@ const PaymentPage = () => {
           emailDetails = `Reservation for ${numberOfPeople} guest(s) at ${diningOption.name}.`;
           bookingDate = reservationDate;
         } else {
-          emailDetails =
-            bookingType === "room"
-              ? `Booking for room: ${room.room_type}. Check-out: ${checkOut}.`
-              : `Waitlist request for room: ${room.room_type}. Requested Check-in: ${checkIn}.`;
+          emailDetails = isRoomWaitlisted
+            ? `Waitlist request for room: ${room.room_type}. Requested Check-in: ${checkIn}.`
+            : `Booking for room: ${room.room_type}. Check-out: ${checkOut}.`;
           bookingDate = checkIn;
         }
 
@@ -129,7 +139,7 @@ const PaymentPage = () => {
               email: email,
               date: bookingDate,
               details: emailDetails,
-              type: bookingType,
+              type: bookingType === "room" && isRoomWaitlisted ? "waitlist" : bookingType,
             }),
           });
 
