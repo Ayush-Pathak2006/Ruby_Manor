@@ -37,12 +37,12 @@ const MyBookingsPage = () => {
         else setReservations(reservationData || []);
 
         const { data: waitlistData, error: waitlistError } = await supabase
-          .from('waitlist_queue')
-          .select(`*, rooms ( room_type, image_url )`)
-          .eq('customer_email', userEmail)
-          .gte('requested_check_in', today)
-          .order('requested_check_in', { ascending: true })
-          .order('waitlist_position', { ascending: true });
+        .from('waitlist_queue')
+        .select(`*, rooms ( room_type, image_url )`)
+        .eq('customer_email', userEmail)
+        .gte('requested_date', today)
+        .order('requested_date', { ascending: true })
+        .order('waitlist_position', { ascending: true });
           
         if (waitlistError) console.error("Error fetching waitlist:", waitlistError);
         else setWaitlist(waitlistData || []);
