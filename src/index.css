@@ -8,21 +8,6 @@ html {
 }
 
 
-#page1 h1 {
-  position: relative; 
-}
-
-#page1 h1::before {
-  content: attr(data-text); 
-  position: absolute;
-  top: -4px;
-  left: -4px;
-  -webkit-text-stroke: 2px #ff4444; 
-  color: transparent;
-  z-index: -1;
-}
-
-
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
 }

@@ -2,7 +2,15 @@
 
 **Experience luxury like never before.** A full-stack hotel booking website featuring room and dining reservations, user authentication, and automated email confirmations. Built with React, Tailwind CSS, and Supabase.
 
-**Live Demo:** http://rubymanor.netlify.app 
+**Live Demo:** https://rubymanor.netlify.app
+
+---
+
+## 🎬 Demo
+
+Booking needs a Google sign-in, so here is the whole flow: picking dates for a room, paying, the booking under **Your Bookings**, and the confirmation email.
+
+![Booking a room at The Ruby Manor and receiving the confirmation email](docs/booking-demo.gif)
 
 ---
 
@@ -51,8 +59,8 @@ Follow these steps to set up the project locally:
 
 1.  **Clone the repository:**
     ```bash
-    git clone [https://github.com/your-username/ruby-manor.git](https://github.com/your-username/ruby-manor.git)
-    cd ruby-manor
+    git clone https://github.com/Ayush-Pathak2006/Ruby_Manor.git
+    cd Ruby_Manor
     ```
 
 2.  **Install dependencies:**
@@ -103,6 +111,12 @@ The following environment variables are required to run the application:
 * `VITE_SUPABASE_ANON_KEY`: Your Supabase public anonymous key.
 
 For deployment (e.g., on Netlify), these variables must be set in the build environment settings. The `BREVO_API_KEY` must be set as a secret using the Supabase CLI (`supabase secrets set ...`).
+
+---
+
+## 🙏 Credits
+
+* Hero video: [Luxury hotel room panning shot](https://mixkit.co/free-stock-video/luxury-hotel-room-panning-shot-4196/) from Mixkit, used under the Mixkit Stock Video Free License.
 
 ---
 
